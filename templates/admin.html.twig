@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <link rel="stylesheet" href="{{asset('styles/admin.css')}}">
+    <link rel="stylesheet" href="{{asset('styles/index.css')}}">
+    <link rel="stylesheet" href="{{asset('styles/bootstrap.min.css')}}">
+    <script src="{{asset('script/input.js')}}" defer></script>
+    {% block stylesheets %}
+    {% endblock %}
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+	<div class="sidebar">
+          <div class="logo">
+               <h2>ADMIN</h2>
+          </div>
+          <nav>
+               <ul>
+                   	<li class="lien {{"admin.index" == app.current_route ? 'active' : '' }}"><a href="{{path('admin.index')}}">Accueil</a></li>
+                    <li class="lien {{"medicament" in app.current_route ? 'active' : ''}}"><a href="{{path('admin.medicament')}}">Médicaments</a></li>
+          	     <li class="lien {{"category" in app.current_route ? 'active' : ''}}"><a href="{{path('admin.category.index')}}">Catégories</a></li>
+          	     <li class="lien {{"admin.users" in app.current_route ? 'active' : ''}}"><a href="{{path('admin.users.index')}}">Utilisateurs</a></li>
+          	     <li class="lien {{"ventes" in app.current_route ? 'active' : ''}}"><a href="{{path('admin.ventes.index')}}">Ventes</a></li>
+			     <li>
+				     <form action="/logout" method="POST">
+					    <input type="submit" value="Déconnexion" class="btn btn-danger">
+				     </form>
+			     </li>
+          	</ul>
+          </nav>
+     </div>	
+     <section class="home-section">
+          <nav>
+               <div class="sidebar-button">
+                    <i class="bx bx-menu sidebarBtn"></i>
+                    <h3><span class="dashboard">PHA</span>RM</h3>
+               </div>
+               {% if is_granted('ROLE_ADMIN') %}
+                    <div class="admins d-flex align-items-center justify-content-center flex-row gap-3">
+                         <a class="liens {{"admin" in app.current_route ? 'active': ''}}" href="{{path('admin.index')}}">Administration</a>
+                         <a class="liens {{"users.index" == app.current_route ? 'active': ''}}" href="{{path('users.index')}}">Utilisateur</a>
+                    </div>
+               {% endif %}
+               
+               <a style="text-decoration:none;" href="{{path('admin.users.profil', {id: app.user.id})}}" class="profile-details">
+                    {% if app.user.image %}
+                         <img src="/image/users/{{app.user.image}}" alt=""/>
+                    {% else %}
+                    
+                    {% set vert = random(range(0, 255)) %}
+                    {% set rouge = random(range(0, 255)) %}
+                    {% set blue = random(range(0, 255)) %}
+                    {% set color = "rgb("~ vert ~", " ~ rouge ~", "~ blue ~")" %}
+                         
+                         <div class="randoms">
+                              <span class="random d-flex align-items-center justify-content-center" style="background:{{color}};">{{ app.user.nom | slice(0, 1) | upper }}</span>
+                         </div>
+                    {% endif %}
+                    <span class="admin_name">{{app.user.nom}} {{app.user.prenom}}</span>
+                    <i class="bx bx-chevron-down"></i>
+               </a>
+          </nav>
+     </section>
+
+     {% block body %}{% endblock %}
+</body>
+</html>

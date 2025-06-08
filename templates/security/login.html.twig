@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<!-- Gestion de l'affichage de la page de connexion -->
+<style>
+    .login-card {
+        border-radius: 15px;
+    }
+    .illustration {
+        background: url("{{ asset('images/login.png') }}") no-repeat center center;
+        background-size: cover;
+        min-height: 100%;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="row shadow-lg bg-white rounded login-card">
+                <div class="col-md-6 d-none d-md-block illustration"></div>
+                <div class="col-md-6 p-5">
+                    <!-- Affichage du logo et titre -->
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('images/ujkz.jpg') }}" alt="Logo Université" width="80">
+                        <h3 class="mt-2 text-primary">Connexion</h3>
+                    </div>
+                    {% if error %}
+                        <!-- Affichage des erreurs de connexion -->
+                        <div class="alert alert-danger text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+                    <!-- Formulaire de connexion avec email et password -->
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" value="{{ last_email }}" name="email" id="email" class="form-control" required autofocus placeholder="Entrez votre email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" name="password" id="password" class="form-control" required placeholder="Entrez votre mot de passe">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
+                            <label for="remember_me" class="form-check-label">Se souvenir de moi</label>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Se connecter</button>
+                        </div>
+                    </form>
+                    <!-- Lien masqué temporairement (à gérer plus tard) -->
+                    <div class="text-center mt-3">
+                        <p>Pas encore de compte ? <a href="{{ path('app_inscription') }}">S'inscrire</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

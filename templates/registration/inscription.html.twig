@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<style>
+    body { background-color: #f8f9fa; }
+    .card { border-radius: 15px; }
+    .form-label { font-weight: 500; }
+
+    /* Champ invalide : bordure rouge */
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    /* Erreur : texte rouge sous le champ */
+    .invalid-feedback {
+        color: #dc3545;
+        display: block !important;
+    }
+
+    .illustration {
+        background: url("{{ asset('images/login.png') }}") no-repeat center center;
+        background-size: cover;
+        min-height: 100%;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+    @media (max-width: 767px) { .illustration { display: none; } }
+    input::placeholder, select::placeholder { font-style: italic; }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="row shadow-lg bg-white rounded overflow-hidden">
+                <div class="col-md-6 illustration"></div>
+                <div class="col-md-6 p-5">
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('images/ujkz.jpg') }}" alt="Logo Université" width="80">
+                        <h3 class="mt-2 text-primary">Créer un compte</h3>
+                    </div>
+
+                    {% for flash_error in app.flashes('error') %}
+                        <div class="alert alert-danger">{{ flash_error }}</div>
+                    {% endfor %}
+                    {% for flash_success in app.flashes('success') %}
+                        <div class="alert alert-success">{{ flash_success }}</div>
+                    {% endfor %}
+
+                    {{ form_start(registrationForm, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                    {% for field in registrationForm %}
+                        {% if field.vars.name != '_token' %}
+                            <div class="mb-3">
+                                {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
+
+                                {% set css = 'form-control' ~ (field.vars.errors|length > 0 ? ' is-invalid' : '') %}
+                                {% if field.vars.name == 'agreeTerms' %}
+                                    {{ form_widget(field, {
+                                        'attr': {
+                                            'class': 'form-check-input' ~ (field.vars.errors|length > 0 ? ' is-invalid' : '')
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(field, {'attr': {'class': css}}) }}
+                                {% endif %}
+
+                                {% for error in field.vars.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error.message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {{ form_widget(registrationForm._token) }}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(registrationForm, {'render_rest': false}) }}
+
+                    <div class="text-center mt-3">
+                        <p>Déjà inscrit ? <a href="{{ path('app.login') }}">Se connecter</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

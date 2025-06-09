@@ -29,8 +29,8 @@
                <table class="container table table-striped table-hover table-bordered">
                     <thead style="text-align:center;">
                          <tr>
-                              <th scope="col"></th>
-                              <th scope="col">#</th>
+                              <th scope="col">Photo</th>
+                              <th scope="col">Num</th>
                               <th scope="col">Nom</th>
                               <th scope="col">Prénom</th>
                               <th scope="col">Email</th>
@@ -62,15 +62,16 @@
                                         {% if ("ADMIN" in user.roles | join('') | upper) %}
                                              <span class="ordonnance no-required">Administrateur</span>
                                         {% else %}
-                                             <span class="ordonnance requireds">Utilisateur</span>
+                                             <span class="ordonnance requireds">Patient</span>
                                         {% endif %}
                                    </td>
                                    <td>
                                         <div class="d-flex">
                                              <a href="{{path('admin.users.profil', {id: user.id})}}" class="mx-1 btn btn-sm btn-primary">Profil</a>
-                                             <form action="{{path('admin.users.delete', {id: user.id})}}" method="POST">
-                                                  <input type="submit" class="btn btn-danger btn-sm" value="Supprimer">
+                                             <form action="{{ path('admin.users.delete', {id: user.id}) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet Patient ?');">
+                                             <input type="submit" class="btn btn-danger btn-sm" value="Supprimer">
                                              </form>
+
                                         </div>
                                    </td>
                               </tr>  

@@ -16,20 +16,7 @@
     position: relative;
 }
 
-.profile-card::before {
-    content: '€';
-    position: absolute;
-    top:-5%;
-    right:-2%;
-    padding:8px 15px;
-    border:2px solid white;
-    box-shadow:0 0 7px rgba(0, 0, 0, 0.4);
-    color:white;
-    font-size:14px;
-    font-weight:bolder;
-    border-radius:50%;
-    background-color: #3da342;
-}
+
 
 .profile-header {
     background: #4caf50; /* Green background for header */

@@ -1,12 +1,12 @@
 {% extends "admin.html.twig" %}
-{% block title %} Home ~ Admin {% endblock %}
+{% block title %} DASHBOARD |ADMIN {% endblock %}
 {% block stylesheets %}
      <link rel="stylesheet" href="{{asset('styles/user.css')}}">
 {% endblock %}
 {% block body %}
 
 	<div class="dashboards">
-		<div class="cards">
+		<div class="cards m-0">
      	     <a style="text-decoration: none;" href="{{path('admin.medicament')}}" class="card blue">
      	         <h3>Médicaments</h3>
      	         <p>{{ medicaments }}</p>
@@ -18,17 +18,31 @@
      	         <span>Gérer les catégories</span>
      	     </a>
      	     <a style="text-decoration: none;" href="{{path('admin.users.index')}}" class="card purple">
-     	         <h3>Utilisateurs</h3>
+     	         <h3>Patients</h3>
      	         <p>{{ users }}</p>
-     	         <span>Gérer les utilisateurs</span>
+     	         <span>Gérer les Patients</span>
      	     </a>
-     	     <a style="text-decoration:none;" href="{{path('admin.ventes.index')}}" class="card green">
+     	     <a style="text-decoration:none;" href="{{path('admin.ventes.index')}}" class="card green ">
      	         <h3>Ventes</h3>
 			    <i style="color:white">Les 5 dérnières ventes: </i>
-     	         <p class="fw-bolder">{{ total | number_format(0, ',', ' ') }} Ar</p>
+     	         <p class="fw-bolder fs-0.5 ">{{ total | number_format(0, ',', ' ') }} FCFA</p>
      	         <span>Gérer les ventes</span>
      	     </a>
      	</div>
+		<div class="card shadow-lg rounded-4 border-0 mb-4 ms-3">
+		<div class="card-header py-4 text-white text-center" style="background: linear-gradient(90deg, #4e73df 0%, #1cc88a 100%);">
+			<h5 class="m-0 fw-bold">
+			📊 État des stocks
+			</h5>
+		</div>
+		<div class="card-body p-4" style="height: 300px;">
+			<canvas id="graphiqueProduits"
+					data-labels='{{ labels}}'
+					data-stocks='{{ stocks }}'
+					data-colors='{{ colors}}'>
+			</canvas>
+		</div>
+		</div>
 		<div class="table-data">
 			<div class="order">
 				<div class="head">
@@ -39,8 +53,8 @@
 				<table>
 					<thead>
 						<tr>
-							<th>User</th>
-							<th>Date Order</th>
+							<th>Patient</th>
+							<th>Date </th>
 							<th>Status</th>
 							<th></th>
 						</tr>
@@ -59,7 +73,7 @@
 								<td>{{ vente.createdAt | date}}</td>
 								<td>
 									<span class="status pending">
-										completed
+										completé
 									</span>
 								</td>
 								<td><a class="btn btn-sm btn-primary" href="{{path('admin.ventes.detail', {id: vente.id})}}">Détails</a></td>
@@ -71,5 +85,10 @@
 		</div>
 	</div>
 
+{% block javascripts %}
+    <script src="{{ asset('script/graphe.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	
 
+{% endblock %}
 {% endblock %}

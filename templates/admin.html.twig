@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    <link rel="stylesheet" href="{{asset('styles/admin.css')}}">
-    <link rel="stylesheet" href="{{asset('styles/index.css')}}">
-    <link rel="stylesheet" href="{{asset('styles/bootstrap.min.css')}}">
-    <script src="{{asset('script/input.js')}}" defer></script>
-    {% block stylesheets %}
-    {% endblock %}
+    <link rel="icon" type="image/png" href="{{ asset('images/ifoad.png') }}">
+    
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/bootstrap.min.css') }}">
+    <script src="{{ asset('script/input.js') }}" defer></script>
+
+    {% block stylesheets %}{% endblock %}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
+
 <body>
 	<div class="sidebar">
           <div class="logo">
-               <h2>ADMIN</h2>
+               <h class= "taille"><span class="dashboard">ADM</span>IN</h2>
           </div>
           <nav>
                <ul>
@@ -37,13 +39,14 @@
      <section class="home-section">
           <nav>
                <div class="sidebar-button">
-                    <i class="bx bx-menu sidebarBtn"></i>
-                    <h3><span class="dashboard">PHA</span>RM</h3>
+               <i class="bx bx-menu sidebarBtn"></i>
+               <img src="{{ asset('images/ifoad.png') }}" alt="Logo IFOAD" class="sidebar-logo">
                </div>
+
                {% if is_granted('ROLE_ADMIN') %}
                     <div class="admins d-flex align-items-center justify-content-center flex-row gap-3">
                          <a class="liens {{"admin" in app.current_route ? 'active': ''}}" href="{{path('admin.index')}}">Administration</a>
-                         <a class="liens {{"users.index" == app.current_route ? 'active': ''}}" href="{{path('users.index')}}">Utilisateur</a>
+                         <a class="liens {{"users.index" == app.current_route ? 'active': ''}}" href="{{path('users.index')}}">Patient</a>
                     </div>
                {% endif %}
                
@@ -67,6 +70,8 @@
           </nav>
      </section>
 
-     {% block body %}{% endblock %}
+        {% block body %}{% endblock %}
+    
+     
 </body>
 </html>

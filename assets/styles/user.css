@@ -163,3 +163,8 @@
      background: var(--orange);
 }
    
+.sidebar-logo {
+    width: 60px; 
+    height: auto;
+    margin-left: 10px; 
+}

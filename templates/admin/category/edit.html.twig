@@ -1,18 +1,23 @@
 {% extends "admin.html.twig" %}
 {% block title %} Création de catégorie {% endblock %}
 {% block stylesheets %}
+     <link rel="stylesheet" href="{{asset('styles/register.css')}}">
      <link rel="stylesheet" href="{{asset('styles/contente.css')}}">
 {% endblock %}
 {% block body %}
 
-     <div class="containers container">
-          <form class="forms d-flex align-items-center justify-content-center flex-row" action="{{path('admin.category.update', {id:category.id})}}" method="POST">
-               <div class="d-flex align-items-center justify-content-center flex-row">
-                    <label for="" class="fw-bolder">Nom: </label>
-                    <input type="text" value="{{category.nom}}" name="nom" placeholder="Nom..." class="form-control">
-               </div>
-               <input type="submit" value="Enregistrer" class="btn btn-primary">
-          </form>
+     <div class="registration container containers">
+          <div class="wrapper">
+               <h2>Edition</h2>
+               <form action="{{path('admin.category.update', {id:category.id})}}" method="POST">
+                    <div class="d-flex align-items-center justify-content-center flex-row">
+                         <label for="" class="fw-bolder">Nom:  </label>
+                         <input type="text" value="{{category.nom}}" name="nom" placeholder="Nom..." class="form-control ms-3">
+                    </div>
+                    <input type="submit" value="Enregistrer" class="btn btn-primary mt-3">
+
+            </form>
+            </div>  
      </div>
 
 {% endblock %}

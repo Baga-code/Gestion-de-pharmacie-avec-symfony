@@ -197,7 +197,21 @@ nav .sidebar-button i{
 
 .dashboard {
   color:rgb(9, 181, 9);
+
 }
+
+.taille {
+  
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.sidebar-logo {
+    width: 60px; 
+    height: auto;
+    margin-left: 10px; 
+}
+
 
 .sidebar-button h3 {
   letter-spacing:3px;

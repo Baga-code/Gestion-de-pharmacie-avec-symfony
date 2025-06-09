@@ -1,43 +1,44 @@
 {% extends "admin.html.twig" %}
 {% block title %} Création de médicament {% endblock %}
 {% block stylesheets %} 
+     <link rel="stylesheet" href="{{asset('styles/register.css')}}">
      <link rel="stylesheet" href="{{asset('styles/content.css')}}">
 {% endblock %}
 {% block body %}
-     <div class="containers container-fluid">
-          {{form_start(form)}}
-               <div class="container-fluid my-2 row">
-                    <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
-                         {{form_label(form.nom)}}
-                         {{form_widget(form.nom)}}
-                    </div>
-                    <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
-                         {{form_label(form.prix)}}
-                         {{form_widget(form.prix)}}
-                    </div>
-               </div>
-               <div class="container-fluid my-2 row">
-                    <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
-                         {{form_label(form.nombre)}}
-                         {{form_widget(form.nombre)}}
-                    </div>
-                    <div class="col-6 gap-2 d-flex align-items-center justify-content-between flex-row">
-                         <div class="d-flex align-items-center justify-content-center flex-row">
-                              <label class="fw-bolder" for="">Ordonnance requise: </label>
-                              <input {% if medicament.ordonnance == 1  %} checked {% endif %} type="radio" name="ordonnance" value="1">
+               {{form_start(form)}}
+               <h2 class="mt-3">Edition</h2>
+                    <div class="container-fluid my-2 row">
+                         <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
+                              {{form_label(form.nom)}}
+                              {{form_widget(form.nom)}}
                          </div>
-                         <div class="d-flex align-items-center justify-content-center flex-row">
-                              <label class="fw-bolder" for="">Ordonnance non requise: </label>
-                              <input {% if medicament.ordonnance == 0  %} checked {% endif %} type="radio" name="ordonnance" value="0">
+                         <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
+                              {{form_label(form.prix)}}
+                              {{form_widget(form.prix)}}
                          </div>
                     </div>
-               </div>
-               <div class="container-fluid my-2 row">
-                    <div class="col-12 gap-2 d-flex align-items-center justify-content-center flex-row">
-                         {{form_label(form.category)}}
-                         {{form_widget(form.category)}}
+                    <div class="container-fluid my-2 row">
+                         <div class="col-6 gap-2 d-flex align-items-center justify-content-center flex-row">
+                              {{form_label(form.nombre)}}
+                              {{form_widget(form.nombre)}}
+                         </div>
+                         <div class="col-6 gap-2 d-flex align-items-center justify-content-between flex-row">
+                              <div class="d-flex align-items-center justify-content-center flex-row">
+                                   <label class="fw-bolder" for="">Ordonnance requise: </label>
+                                   <input {% if medicament.ordonnance == 1  %} checked {% endif %} type="radio" name="ordonnance" value="1">
+                              </div>
+                              <div class="d-flex align-items-center justify-content-center flex-row">
+                                   <label class="fw-bolder" for="">Ordonnance non requise: </label>
+                                   <input {% if medicament.ordonnance == 0  %} checked {% endif %} type="radio" name="ordonnance" value="0">
+                              </div>
+                         </div>
                     </div>
-               </div>
-          {{ form_end(form) }}
-     </div>
+                    <div class="container-fluid my-2 row">
+                         <div class="col-12 gap-2 d-flex align-items-center justify-content-center flex-row">
+                              {{form_label(form.category)}}
+                              {{form_widget(form.category)}}
+                         </div>
+                    </div>
+               {{ form_end(form) }}
+          
 {% endblock %}

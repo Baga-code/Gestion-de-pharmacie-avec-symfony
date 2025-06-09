@@ -1,5 +1,5 @@
 {% extends "admin.html.twig" %}
-{% block title %} Création utilisateur {% endblock %}
+{% block title %} Création Patient {% endblock %}
 {% block stylesheets %}
      <link rel="stylesheet" href="{{asset('styles/register.css')}}">
 {% endblock %}
@@ -7,7 +7,7 @@
 
      <div class="registration container">
           <div class="wrapper">
-               <h2>Registration</h2>
+               <h2>Inscription</h2>
                <form action="{{path('admin.users.store')}}" method="POST" id="form" enctype="multipart/form-data">
                     <div class="container-fluid row">
                          <div class="col-6 input-box">
@@ -24,7 +24,8 @@
                          <div class="col-6 input-box">
                               <select style="width:80%" name="roles" id="" class="form-control">
                                    <option value="admin">Administrateur</option>
-                                   <option value="user">Utilisateur</option>
+                                   <option value="user">Patient</option>
+                                   
                               </select>
                          </div>
                     </div>
@@ -38,7 +39,7 @@
                     </div>
                     <div class="row container-fluid">
                          <div class="col-6 input-box">
-                              <input name="password" type="password" placeholder="Password..." required>
+                              <input name="password" type="password" placeholder="mot de passe..." required>
                          </div>
                          <div class="col-6 input-box">
                               <input type="file" placeholder="Image" class="form-control" name="image">

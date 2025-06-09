@@ -3,6 +3,7 @@
 {% block title %} Médicaments {% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{asset('styles/index.css')}}">
+    <link rel="stylesheet" href="{{asset('styles/user.css')}}">
 {% endblock %}
 {% block name %}
 
@@ -51,7 +52,7 @@
                             <tr>
                                 <td>{{ medicament.id }}</td>
                                 <td>{{medicament.nom}}</td>
-                                <td class="fw-bold">{{ medicament.prix | number_format(0, ',', ' ') }} Ar</td>
+                                <td class="fw-bold">{{ medicament.prix | number_format(0, ',', ' ') }} FCFA</td>
                                 <td>
                                     {% if (medicament.ordonnance == 1) %}
                                         <span class="ordonnance requireds">Requise</span>

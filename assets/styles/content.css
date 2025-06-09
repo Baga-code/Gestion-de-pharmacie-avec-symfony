@@ -129,7 +129,7 @@ header .auth {
      transform: translate(-50%,-50%);
      border-radius:4px;
      box-shadow:0 0 4px rgba(0,0,0,0.2);
-     padding:10px 20px;
+     padding:10px 10px;
      height:300px;
 }
 
@@ -144,16 +144,34 @@ header .auth {
 }
 
 .forms-create {
-     width:500Px;
-     position:fixed;
-     top:50%;
-     left:50%;
-     transform: translate(-50%,-50%);
-     border-radius:4px;
-     box-shadow:0 0 4px rgba(0,0,0,0.2);
-     padding:10px 20px;
-     height:400px;
+     
+     width:800Px;
+     background: #fff;
+     padding: 34px;
+     border-radius: 6px;
+     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
+
+
+.forms-create h2 {
+  position: relative;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.forms-create h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 28px;
+  border-radius: 12px;
+  background: #4070f4;
+}
+
+
 
 .forms h3 {
      letter-spacing:3px;

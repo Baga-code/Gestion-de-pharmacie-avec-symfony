@@ -3,6 +3,7 @@
 {% block stylesheets %}
      <link rel="stylesheet" href="{{asset('styles/profil.css')}}">
      <link rel="stylesheet" href="{{asset('styles/content.css')}}">
+     <link rel="stylesheet" href="{{asset('styles/user.css')}}">
 {% endblock %}
 {% block body %}
      <div class="profil">
@@ -15,7 +16,7 @@
                {% endif %}
                <h2>{{user.nom}} {{ user.prenom }}</h2>
                <p>{{user.adresse}}</p>
-               <p>{{ "ADMIN" in user.roles | join('') | upper ? 'Administrateur' : 'Utilisateur'}}</p>
+               <p>{{ "ADMIN" in user.roles | join('') | upper ? 'Administrateur' : 'Patient'}}</p>
                <div class="profile-stats">
                    <div>
                        <span>Téléphone</span>

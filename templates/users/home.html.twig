@@ -1,5 +1,5 @@
 {% extends "user.html.twig" %}
-{% block title %} Home ~ user {% endblock %}
+{% block title %} DASHBOARD | PATIENT{% endblock %}
 {% block stylesheets %}
      <link rel="stylesheet" href="{{asset('styles/user.css')}}">
 {% endblock %}
@@ -18,14 +18,14 @@
      	         <span>Voir les catégories</span>
      	     </a>
      	     <a style="text-decoration: none;" href="{{path('users.listes')}}" class="card purple">
-     	         <h3>Utilisateurs</h3>
+     	         <h3>Patients</h3>
      	         <p>{{ users }}</p>
-     	         <span>Voir les utilisateurs</span>
+     	         <span>Voir les Patients</span>
      	     </a>
      	     <a style="text-decoration:none;" href="{{path('users.ventes')}}" class="card green">
      	         <h3>Ventes</h3>
 			    <i style="color:white">Les 5 dérnières ventes: </i>
-     	         <p class="fw-bolder">{{ total | number_format(0, ',', ' ') }} Ar</p>
+     	         <p class="fw-bolder">{{ total | number_format(0, ',', ' ') }} FCFA</p>
      	         <span>Gérer les ventes</span>
      	     </a>
      	</div>
@@ -39,8 +39,8 @@
 				<table>
 					<thead>
 						<tr>
-							<th>User</th>
-							<th>Date Order</th>
+							<th>Patient</th>
+							<th>Date </th>
 							<th>Status</th>
 							<th></th>
 						</tr>
@@ -59,7 +59,7 @@
 								<td>{{ vente.createdAt | date}}</td>
 								<td>
 									<span class="status pending">
-										completed
+										completé
 									</span>
 								</td>
 								<td><a class="btn btn-sm btn-primary" href="{{path('users.details', {id: vente.id})}}">Détails</a></td>

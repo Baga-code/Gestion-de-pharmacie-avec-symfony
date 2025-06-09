@@ -1,54 +1,83 @@
-{% extends "admin.html.twig" %}
-{% block title %} Création utilisateur {% endblock %}
-{% block stylesheets %}
-     <link rel="stylesheet" href="{{asset('styles/register.css')}}">
-     <link rel="stylesheet" href="{{asset('styles/content.css')}}">
-{% endblock %}
-{% block body %}
+{# templates/admin/user/edit.html.twig #}
 
-     <div class="registration container containers">
-          <div class="wrapper">
-               <h2>Edition</h2>
-               <form action="{{path('admin.users.update')}}" method="POST" id="form" enctype="multipart/form-data">
-                    <div class="container-fluid row">
-                         <div class="col-6 input-box">
-                              <input name="nom" class="form-control" type="text" value="{{ user.nom }}" placeholder="Nom..." required>
-                         </div>
-                         <div class="col-6 input-box">
-                              <input name="prenom" value="{{ user.prenom }}" class="form-control" type="text" placeholder="Prénom...">
-                         </div>
-                    </div>
-                    <div class="row container-fluid">
-                         <div class="col-6 input-box">
-                              <input name="email" value="{{ user.email }}" class="form-control" type="email" placeholder="Email..." required>
-                         </div>
-                         <div class="col-6 input-box">
-                              <select style="width:80%" name="roles" id="" class="form-control">
-                                   <option {% if 'ADMIN' in user.roles | join('') | upper %} selected {% endif %}value="admin">Administrateur</option>
-                                   <option {% if 'ADMIN' not in user.roles | join('') | upper %} selected {% endif %} value="user">Utilisateur</option>
-                              </select>
-                         </div>
-                    </div>
-                    <div class="container-fluid row">
-                         <div class="col-6 input-box">
-                              <input value="{{user.telephone}}" name="telephone" type="text" placeholder="Téléphone..." required>
-                         </div>
-                         <div class="col-6 input-box">
-                              <input value="{{user.adresse}}" type="text" name="adresse" placeholder="Adresse..." required>
-                         </div>
-                    </div>
-                    <div class="row container-fluid">
-                         <div class="col-6 input-box">
-                              <input name="password" type="password" placeholder="Password..." required>
-                         </div>
-                         <div class="col-6 input-box">
-                              <input type="file" placeholder="Image" class="form-control" name="image">
-                         </div>
-                    </div>
-                    <div class="input-box button">
-                         <input type="Submit" value="Créer">
-                    </div>
-               </form>
-          </div>
-     </div>
+{% extends "admin.html.twig" %}
+{% block title %} Édition utilisateur {% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/register.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/content.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="registration container">
+    <div class="wrapper">
+        <h2>Édition</h2>
+        <form action="{{ path('admin.users.update', {id: user.id}) }}"
+              method="POST"
+              enctype="multipart/form-data"
+        >
+            {# CSRF token pour protéger le formulaire #}
+            <input type="hidden" name="_token" value="{{ csrf_token('user-edit') }}">
+
+            <div class="row">
+                <div class="col-6 input-box">
+                    <label>Nom</label>
+                    <input name="nom" type="text" class="form-control"
+                           value="{{ user.nom }}" required>
+                </div>
+                <div class="col-6 input-box">
+                    <label>Prénom</label>
+                    <input name="prenom" type="text" class="form-control"
+                           value="{{ user.prenom }}">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 input-box">
+                    <label>Email</label>
+                    <input name="email" type="email" class="form-control"
+                           value="{{ user.email }}" required>
+                </div>
+                <div class="col-6 input-box">
+                    <label>Rôle</label>
+                    <select name="roles" class="form-control">
+                        <option value="admin" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>
+                            Administrateur
+                        </option>
+                        <option value="user" {% if 'ROLE_ADMIN' not in user.roles %}selected{% endif %}>
+                            Patient
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 input-box">
+                    <label>Téléphone</label>
+                    <input name="telephone" type="text" class="form-control"
+                           value="{{ user.telephone }}" required>
+                </div>
+                <div class="col-6 input-box">
+                    <label>Adresse</label>
+                    <input name="adresse" type="text" class="form-control"
+                           value="{{ user.adresse }}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 input-box">
+                    <label>Mot de passe</label>
+                    <input name="password" type="password" class="form-control" required>
+                </div>
+                <div class="col-6 input-box">
+                    <label>Photo de profil</label>
+                    <input name="image" type="file" class="form-control">
+                </div>
+            </div>
+
+            <div class="input-box button">
+                <input type="submit" value="Mettre à jour">
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

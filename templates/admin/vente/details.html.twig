@@ -16,7 +16,7 @@
               <div class="from">
                  <h2>{{ vente.user.nom }} {{ vente.user.prenom }}</h2>
                  {{ vente.user.email }}<br>
-                 {{ vente.user.adresse }}</p>
+                 <p> <strong>Adresse : </strong>{{ vente.user.adresse }} </p>
               </div>
           </section>
           <section class="invoice-details">
@@ -36,14 +36,14 @@
                                 <td>{{detail.medicament.prix}}</td>
                                 <td>{{ detail.nombre }}</td>
                                 {% set total = detail.nombre * detail.medicament.prix %}
-                                <td class="fw-bolder">{{ total | number_format(0, ',', ' ') }} Ar</td>
+                                <td class="fw-bolder">{{ total | number_format(0, ',', ' ') }} FCFA</td>
                            </tr>
                       {% endfor %}
                   </tbody>
               </table>
           </section>
           <section class="totals">
-              <p class="total">TOTAL : <span>{{ vente.total | number_format(0, ',', ' ') }} Ar</span></p>
+              <p class="total">TOTAL : <span>{{ vente.total | number_format(0, ',', ' ') }} FCFA</span></p>
           </section>
           <footer>
               <p class="thanks">MERCI DE VOTRE CONFIANCE</p>

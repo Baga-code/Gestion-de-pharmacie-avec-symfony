@@ -3,6 +3,7 @@
 {% block stylesheets %}
      <link rel="stylesheet" href="{{asset('styles/register.css')}}">
      <link rel="stylesheet" href="{{asset('styles/content.css')}}">
+     <link rel="stylesheet" href="{{asset('styles/user.css')}}">
 {% endblock %}
 {% block body %}
 
@@ -26,7 +27,7 @@
                               <div class="col-6 input-box">
                                    <select style="width:80%" name="roles" id="" class="form-control">
                                         <option {% if 'ADMIN' in user.roles | join('') | upper %} selected {% endif %}value="admin">Administrateur</option>
-                                        <option {% if 'ADMIN' not in user.roles | join('') | upper %} selected {% endif %} value="user">Utilisateur</option>
+                                        <option {% if 'ADMIN' not in user.roles | join('') | upper %} selected {% endif %} value="user">Patient</option>
                                    </select>
                               </div>
                          {% endif %}

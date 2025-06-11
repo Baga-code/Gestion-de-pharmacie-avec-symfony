@@ -21,7 +21,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app.login';
+    public const LOGIN_ROUTE = 'app_login';
 
     public function __construct(private UrlGeneratorInterface $urlGenerator, private Security $security)
     {
@@ -45,17 +45,16 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+        // Supprimer tout chemin cible pour éviter les redirections inattendues
+        $this->removeTargetPath($request->getSession(), $firewallName);
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        $roles = $token->getUser()->getRoles();
+
+        if (in_array('ROLE_ADMIN', $roles, true)) {
             return new RedirectResponse($this->urlGenerator->generate('admin.index'));
         }
-        elseif ($this->security->isGranted('ROLE_USER')) {
-            return new RedirectResponse($this->urlGenerator->generate('users.index'));
-        }
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+
+        return new RedirectResponse($this->urlGenerator->generate('users.index'));
     }
 
     protected function getLoginUrl(Request $request): string

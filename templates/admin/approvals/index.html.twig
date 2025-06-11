@@ -1,0 +1,52 @@
+{% extends 'user.html.twig' %}
+{% block title %}Approbations{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/user.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="containers container">
+        <div class="container d-flex align-items-center justify-content-center flex-column">
+            <h2 class="align-self-start mb-4">Demandes d'<span style="border-bottom:2px solid rgb(9,181,9);">app</span>robation</h2>
+            <div class="container my-3">
+                {% for type, message in app.flashes %}
+                    <div class="d-flex align-items-center alert alert-{{ type }}">{{ message | join('') }}</div>
+                {% endfor %}
+            </div>
+            {% if approvals is empty %}
+                <p class="text-center">Aucune demande en attente.</p>
+            {% else %}
+                <table class="container table table-striped table-hover table-bordered">
+                    <thead style="text-align:center;">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Médicament</th>
+                            <th>Quantité</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        {% for approval in approvals %}
+                            <tr>
+                                <td>{{ approval.cart.user.nom }} {{ approval.cart.user.prenom }}</td>
+                                <td>{{ approval.cart.medicament.nom }}</td>
+                                <td>{{ approval.cart.quantity }}</td>
+                                <td>{{ approval.createdAt | date('Y-m-d H:i:s') }}</td>
+                                <td>
+                                    <form action="{{ path('admin.approvals.approve', {id: approval.id}) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                    </form>
+                                    <form action="{{ path('admin.approvals.reject', {id: approval.id}) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger">Rejeter</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            <a href="{{ path('admin.index') }}" class="btn btn-primary mt-3">Retour</a>
+        </div>
+    </div>
+{% endblock %}

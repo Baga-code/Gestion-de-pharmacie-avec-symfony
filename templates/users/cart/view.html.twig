@@ -1,0 +1,70 @@
+{% extends 'user.html.twig' %}
+{% block title %}Panier{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/user.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="containers container">
+        <div class="container d-flex align-items-center justify-content-center flex-column">
+            <h2 class="align-self-start mb-4">Votre <span style="border-bottom:2px solid rgb(9,181,9);">pan</span>ier</h2>
+            <div class="container my-3">
+                {% for type, message in app.flashes %}
+                    <div class="d-flex align-items-center alert alert-{{ type }}">{{ message | join('') }}</div>
+                {% endfor %}
+            </div>
+            {% if cartItems is empty %}
+                <p class="text-center">Votre panier est vide.</p>
+            {% else %}
+                <table class="container table table-striped table-hover table-bordered">
+                    <thead style="text-align:center;">
+                        <tr>
+                            <th>Médicament</th>
+                            <th>Prix Unitaire</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                            <th>Prescription</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        {% for item in cartItems %}
+                            <tr>
+                                <td>{{ item.medicament.nom }}</td>
+                                <td>{{ item.medicament.prix | number_format(0, ',', ' ') }} FCFA</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ (item.medicament.prix * item.quantity) | number_format(0, ',', ' ') }} FCFA</td>
+                                <td>
+                                    {% if item.requiresApproval %}
+                                        {% set approval = item | approval_status %}
+                                        {% if approval.status == 'pending' %}
+                                            <span class="text-warning">En attente d’approbation</span>
+                                        {% elseif approval.status == 'approved' %}
+                                            <span class="text-success">Approuvé</span>
+                                        {% else %}
+                                            <span class="text-danger">Rejeté</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-success">Aucune approbation requise</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{{ path('users.cart.remove', {id: item.id}) }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-danger">Retirer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="container text-end">
+                    <h4>Total: {{ total | number_format(0, ',', ' ') }} FCFA</h4>
+                    <form action="{{ path('users.cart.checkout') }}" method="POST">
+                        <button type="submit" class="btn btn-success">Finaliser l'achat</button>
+                    </form>
+                </div>
+            {% endif %}
+            <a href="{{ path('users.medicament') }}" class="btn btn-primary mt-3">Continuer les achats</a>
+        </div>
+    </div>
+{% endblock %}

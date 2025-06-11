@@ -1,0 +1,45 @@
+{% extends 'user.html.twig' %}
+{% block title %}Mes Achats{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/user.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="containers container">
+        <div class="container d-flex align-items-center justify-content-center flex-column">
+            <h2 class="align-self-start mb-4">Mes <span style="border-bottom:2px solid rgb(9,181,9);">ach</span>ats</h2>
+            <div class="container my-3">
+                {% for type, message in app.flashes %}
+                    <div class="d-flex align-items-center alert alert-{{ type }}">{{ message | join('') }}</div>
+                {% endfor %}
+            </div>
+            {% if purchases is empty %}
+                <p class="text-center">Vous n'avez aucun achat.</p>
+            {% else %}
+                <table class="container table table-striped table-bordered">
+                    <thead style="text-align: center;">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        {% for purchase in purchases %}
+                            <tr>
+                                <td>{{ purchase.id }}</td>
+                                <td>{{ purchase.createdAt | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ purchase.total | number_format(0, ',', ' ') }} FCFA</td>
+                                <td>
+                                    <a href="{{ path('users.purchases.show', {id: purchase.id}) }}" class="btn btn-sm btn-primary">Détails</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+            <a href="{{ path('users.index') }}" class="btn btn-primary mt-3">Retour</a>
+        </div>
+    </div>
+{% endblock %}

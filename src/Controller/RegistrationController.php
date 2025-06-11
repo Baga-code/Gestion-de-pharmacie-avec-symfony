@@ -48,7 +48,7 @@ class RegistrationController extends AbstractController
                 $userAuthenticator->authenticateUser($user, $authenticator, $request);
 
                 $this->addFlash('success', 'Inscription réussie !');
-                return $this->redirectToRoute('app.login');
+                return $this->redirectToRoute('app_login');
             }
         }
 

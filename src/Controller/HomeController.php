@@ -10,83 +10,73 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class HomeController extends AbstractController
 {
-    // ------------------------------------------------------------------------
-    // Constructeur : injection de l'EntityManager pour accès aux repos
-    public function __construct(private EntityManagerInterface $entity)
-    {
-    }
-    // ------------------------------------------------------------------------
+    private EntityManagerInterface $entity;
 
-    // ------------------------------------------------------------------------
-    // Dashboard admin : compteurs et graphique de stock
-    #[Route('/', name: 'admin.index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    public function __construct(EntityManagerInterface $entity)
+    {
+        $this->entity = $entity;
+    }
+
+    #[Route('/', name: 'admin.index')]
     public function admin(): Response
     {
-        // → Compteurs existants
-        $medicaments = $this->entity->getRepository(Medicament::class)->medicamentNumber();
-        $categories  = $this->entity->getRepository(Category::class)->categoryNumber();
-        $users       = $this->entity->getRepository(User::class)->userNumber();
+        $medicaments = $this->entity->getRepository(Medicament::class)->count([]);
+        $categories = $this->entity->getRepository(Category::class)->count([]);
+        $users = $this->entity->getRepository(User::class)->count([]);
 
-        // → Récupération des ventes et calcul du total
-        $lastVentes = $this->entity->getRepository(Vente::class)->getSomme();
-        $total = array_reduce($lastVentes, fn($sum, $v) => $sum + $v['total'], 0);
-        $ventes = $this->entity->getRepository(Vente::class)->getLastVente();
+        $total = $this->entity->createQueryBuilder('v')
+            ->select('SUM(v.total)')
+            ->from(Vente::class, 'v')
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
 
-        // → NOUVEAU : statistiques de stock pour Chart.js
-        $stats  = $this->entity
-                       ->getRepository(Medicament::class)
-                       ->getStockStats();
+        $ventes = $this->entity->getRepository(Vente::class)->findBy(
+            [],
+            ['createdAt' => 'DESC'],
+            5
+        );
 
-        $labels = array_map(fn($s) => $s['produit'], $stats);
-        $stocks = array_map(fn($s) => $s['stock'],   $stats);
-        // Génération dynamique de couleurs RGBA
-       $colors = array_map(
-          fn() => sprintf('rgba(%d,%d,%d,0.7)', rand(0,255), rand(0,255), rand(0,255)),
-          $stats
-          );
+        $data = $this->entity->getRepository(Medicament::class)->findAll();
+        $labels = array_map(fn($m) => $m->getNom(), $data);
+        $stocks = array_map(fn($m) => $m->getNombre(), $data);
+        $colors = array_map(fn($i) => sprintf('#%06X', mt_rand(0, 0xFFFFFF)), range(1, count($data)));
 
-
-        // → Passage des données au template
         return $this->render('admin/home.html.twig', [
             'medicaments' => $medicaments,
-            'categories'  => $categories,
-            'users'       => $users,
-            'total'       => $total,
-            'ventes'      => $ventes,
-            'labels'      => json_encode($labels),
-            'stocks'      => json_encode($stocks),
-            'colors'      => json_encode($colors),
+            'categories' => $categories,
+            'users' => $users,
+            'total' => $total,
+            'ventes' => $ventes,
+            'labels' => json_encode($labels),
+            'stocks' => json_encode($stocks),
+            'colors' => json_encode($colors),
         ]);
     }
-    // ------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
-    // Dashboard utilisateur simple (ROLE_USER) sans graphique
-    #[Route('/users', name: 'users.index', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
-    public function user(): Response
+    #[Route('/users', name: 'users.index')]
+    public function users(): Response
     {
-        // Réutilisation des mêmes compteurs et ventes
-        $medicaments = $this->entity->getRepository(Medicament::class)->medicamentNumber();
-        $categories  = $this->entity->getRepository(Category::class)->categoryNumber();
-        $users       = $this->entity->getRepository(User::class)->userNumber();
+        $medicaments = $this->entity->getRepository(Medicament::class)->count([]);
+        $categories = $this->entity->getRepository(Category::class)->count([]);
+        $users = $this->entity->getRepository(User::class)->count([]);
 
-        $lastVentes = $this->entity->getRepository(Vente::class)->getSomme();
-        $total = array_reduce($lastVentes, fn($sum, $v) => $sum + $v['total'], 0);
-        $ventes = $this->entity->getRepository(Vente::class)->getLastVente();
+        $purchases = $this->entity->getRepository(Vente::class)->findBy(
+            ['user' => $this->getUser()],
+            ['createdAt' => 'DESC'],
+            5
+        );
+
+        $total = array_sum(array_map(fn($v) => $v->getTotal(), $purchases));
 
         return $this->render('users/home.html.twig', [
             'medicaments' => $medicaments,
-            'categories'  => $categories,
-            'users'       => $users,
-            'total'       => $total,
-            'ventes'      => $ventes,
+            'categories' => $categories,
+            'users' => $users,
+            'purchases' => $purchases,
+            'total' => $total,
         ]);
     }
-    // ------------------------------------------------------------------------
 }

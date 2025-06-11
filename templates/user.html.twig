@@ -4,67 +4,61 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" type="image/png" href="{{ asset('images/ifoad.png') }}">
-
-        <link rel="stylesheet" href="{{asset('styles/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('styles/header.css')}}">
-        <link rel="stylesheet" href="{{asset('styles/index.css')}}">
-        
-        <script src="{{asset('script/header.js')}}" defer></script>
-        <script src="{{asset('script/input.js')}}" defer></script>
-        {% block stylesheets %}
-        {% endblock %}
-
+        <link rel="stylesheet" href="{{ asset('styles/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+        <script src="{{ asset('script/header.js') }}" defer></script>
+        <script src="{{ asset('script/input.js') }}" defer></script>
+        {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
-        
         {% set vert = random(range(0, 255)) %}
         {% set rouge = random(range(0, 255)) %}
         {% set blue = random(range(0, 255)) %}
         {% set color = "rgb("~ vert ~", " ~ rouge ~", "~ blue ~")" %}
-        
         <header class="home-section">
- 	        <div class="sidebar-button">
-               <i class="bx bx-menu sidebarBtn"></i>
-               <img src="{{ asset('images/ifoad.png') }}" alt="Logo IFOAD" class="sidebar-logo">
-               </div>
-	        {% if is_granted('ROLE_ADMIN') %}
-                  <form id="form-nav" action="">
-	        		<select name="" id="select" class="form-select">
-	        			<option value="" disabled>Séléctionner en un</option>
-	        			<option {% if (app.current_route starts with 'admin')%} selected {% endif %} value="admin">Administrateur</option>
-	        			<option {% if (app.current_route starts with 'users') %} selected {% endif %} value="users">Patient</option>
-	        		</select>
-	        	</form>
-             {% endif %}
-             
-	        <div class="admins d-flex align-items-center justify-content-center flex-row gap-3">
-                <a class="liens {{ app.current_route == "users.index" ? 'active' : ''}}" href="{{path('users.index')}}">Accueil</a>
-                <a class="liens {{ 'medicament' in app.current_route ? 'active' : '' }}" href="{{path('users.medicament')}}">Médicaments</a>
-	        	<a class="liens {{ 'categories' in app.current_route ? 'active' : '' }}" href="{{path('users.categories')}}">Catégories</a>
-	        	<a class="liens {{ 'listes' in app.current_route ? 'active' : '' }}" href="{{path('users.listes')}}">Utilisateurs</a>
-	        	<a class="liens {{ 'ventes' in app.current_route ? 'active' : '' }}" href="{{path('users.ventes')}}">Ventes</a>
-	        	{# <a class="liens {{ 'admin.ventes' in app.current_route ? 'active' : '' }}" href="{{path('admin.ventes')}}">Ventes</a> #}
-	        </div>
-             {% if app.user %}
-                  <form action="{{path('app.logout')}}" method="POST">
-                       <input type="submit" class="btn btn-danger" value="Se déconnecter">
-                  </form>
-                  <a style="text-decoration:none;" href="{{path('users.profil', {id: app.user.id})}}" class="profile-details">
+            <div class="sidebar-button">
+                <i class="bx bx-menu sidebarBtn"></i>
+                <img src="{{ asset('images/ifoad.png') }}" alt="Logo IFOAD" class="sidebar-logo">
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <form id="form-nav" action="">
+                    <select name="" id="select" class="form-select">
+                        <option value="" disabled>Séléctionner en un</option>
+                        <option {% if app.current_route starts with 'admin' %} selected {% endif %} value="admin">Administrateur</option>
+                        <option {% if app.current_route starts with 'users' %} selected {% endif %} value="users">Patient</option>
+                    </select>
+                </form>
+            {% endif %}
+            <div class="admins d-flex align-items-center justify-content-center flex-row gap-3">
+                <a class="liens {{ app.current_route == 'users.index' ? 'active' : '' }}" href="{{ path('users.index') }}">Accueil</a>
+                <a class="liens {{ 'medicament' in app.current_route ? 'active' : '' }}" href="{{ path('users.medicament') }}">Médicaments</a>
+                <a class="liens {{ 'categories' in app.current_route ? 'active' : '' }}" href="{{ path('users.categories') }}">Catégories</a>
+                <a class="liens {{ 'purchases' in app.current_route ? 'active' : '' }}" href="{{ path('users.purchases.index') }}">Mes Achats</a>
+                <a class="liens {{ 'cart' in app.current_route ? 'active' : '' }}" href="{{ path('users.cart.view') }}">Panier</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="liens {{ 'approvals' in app.current_route ? 'active' : '' }}" href="{{ path('admin.approvals.index') }}">Approbations</a>
+                {% endif %}
+            </div>
+            {% if app.user %}
+                <form action="{{ path('app_logout') }}" method="POST" class="form-inline">
+                    <button type="submit" class="btn btn-danger">Déconnexion</button>
+                </form>
+                <a style="text-decoration:none;" href="{{ path('users.profil', {id: app.user.id}) }}" class="profile-details">
                     {% if app.user.image %}
-	        	     	<img src="/image/users/{{app.user.image}}" alt="" />
-	        	    {% else %}
-	        	     	<div class="randoms">
-                            <span class="random d-flex align-items-center justify-content-center" style="background:{{color}}">{{ app.user.nom | slice(0, 1) | upper }}</span>
+                        <img src="/image/users/{{ app.user.image }}" alt="" />
+                    {% else %}
+                        <div class="randoms">
+                            <span class="random d-flex align-items-center justify-content-center" style="background:{{ color }}">{{ app.user.nom | slice(0, 1) | upper }}</span>
                         </div>
                     {% endif %}
-             	     <span class="admin_name">{{ app.user.nom }} {{ app.user.prenom }}</span>
-             	     <i class="bx bx-chevron-down"></i>
-                  </a>
-             {% endif %}
-             
+                    <span class="admin_name">{{ app.user.nom }} {{ app.user.prenom }}</span>
+                    <i class="bx bx-chevron-down"></i>
+                </a>
+            {% endif %}
         </header>
         {% block body %}{% endblock %}
     </body>

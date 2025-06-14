@@ -41,7 +41,7 @@ class UsersController extends AbstractController
             'search' => $search,
             'count' => iterator_count($medicaments),
             'counts' => $medicaments->count(),
-            'category_id' => $categoryId, // Corrigé de categorySelected à category_id
+            'category_id' => $categoryId, 
             'categories' => $this->entity->getRepository(Category::class)->findAll(),
         ]);
     }

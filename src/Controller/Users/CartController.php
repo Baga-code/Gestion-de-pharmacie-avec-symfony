@@ -21,44 +21,68 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CartController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $entity) {}
-    
-#[Route('/add', name: 'add', methods: ['POST'])]
-public function add(Request $request): Response
-{
-    $medicamentId = $request->request->getInt('medicament_id');
-    $quantities = $request->request->all('quantities');
-    $quantity = isset($quantities[$medicamentId]) ? (int)$quantities[$medicamentId] : 1;
 
-    $medicament = $this->entity->getRepository(Medicament::class)->find($medicamentId);
-    if (!$medicament || $medicament->getNombre() < $quantity) {
-        $this->addFlash('danger', 'Médicament non disponible ou quantité insuffisante.');
-        return $this->redirectToRoute('users.medicament');
+    #[Route('/add', name: 'add', methods: ['POST'])]
+    public function add(Request $request): Response
+    {
+        $medicamentId = $request->request->getInt('medicament_id');
+        $quantities = $request->request->all('quantities');
+        $quantity = isset($quantities[$medicamentId]) ? (int)$quantities[$medicamentId] : 1;
+
+        $medicament = $this->entity->getRepository(Medicament::class)->find($medicamentId);
+        if (!$medicament || $medicament->getNombre() < $quantity) {
+            $this->addFlash('danger', 'Médicament non disponible ou quantité insuffisante.');
+            return $this->redirectToRoute('users.cart.view');
+        }
+
+        // Vérifier si le produit existe déjà dans le panier
+        $existingCart = $this->entity->getRepository(Cart::class)->findOneBy([
+            'user' => $this->getUser(),
+            'medicament' => $medicament,
+        ]);
+
+        if ($existingCart) {
+            // Incrémenter la quantité si le produit existe
+            $newQuantity = $existingCart->getQuantity() + $quantity;
+            if ($medicament->getNombre() >= $newQuantity) {
+                $existingCart->setQuantity($newQuantity);
+                $this->entity->persist($existingCart);
+                $this->entity->flush();
+
+                $message = $medicament->isOrdonnance()
+                    ? 'Quantité mise à jour. En attente d’approbation.'
+                    : 'Quantité mise à jour dans le panier.';
+                $this->addFlash('success', $message);
+            } else {
+                $this->addFlash('danger', 'Quantité insuffisante en stock.');
+            }
+        } else {
+            // Créer une nouvelle entrée si le produit n'existe pas
+            $cart = new Cart();
+            $cart->setUser($this->getUser())
+                 ->setMedicament($medicament)
+                 ->setQuantity($quantity)
+                 ->setRequiresApproval($medicament->isOrdonnance());
+
+            $this->entity->persist($cart);
+
+            if ($medicament->isOrdonnance()) {
+                $approval = new Approval();
+                $approval->setCart($cart)
+                         ->setStatus('pending');
+                $this->entity->persist($approval);
+            }
+
+            $this->entity->flush();
+
+            $message = $medicament->isOrdonnance()
+                ? 'Médicament ajouté au panier. En attente d’approbation.'
+                : 'Médicament ajouté au panier.';
+            $this->addFlash('success', $message);
+        }
+
+        return $this->redirectToRoute('users.cart.view');
     }
-
-    $cart = new Cart();
-    $cart->setUser($this->getUser())
-         ->setMedicament($medicament)
-         ->setQuantity($quantity)
-         ->setRequiresApproval($medicament->isOrdonnance());
-
-    $this->entity->persist($cart);
-
-    if ($medicament->isOrdonnance()) {
-        $approval = new Approval();
-        $approval->setCart($cart)
-                 ->setStatus('pending');
-        $this->entity->persist($approval);
-    }
-
-    $this->entity->flush();
-
-    $message = $medicament->isOrdonnance()
-        ? 'Médicament ajouté au panier. En attente d’approbation.'
-        : 'Médicament ajouté au panier.';
-    $this->addFlash('success', $message);
-
-    return $this->redirectToRoute('users.medicament');
-}
 
     #[Route('/view', name: 'view', methods: ['GET'])]
     public function view(): Response

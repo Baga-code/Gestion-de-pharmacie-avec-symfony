@@ -52,13 +52,15 @@
                                         <span class="ordonnance no-required">Sans ordonnance</span>
                                     {% endif %}
                                 </td>
-                                <td>{{ medicament.category.nom | default('') }}</td>
+                                <td>
+                                    {{ medicament.category.nom|default('Non définie') }} {# Correction ici #}
+                                </td>
                                 <td class="text-{{ medicament.nombre > 0 ? 'success' : 'danger' }}">{{ medicament.nombre > 0 ? 'Disponible' : 'Indisponible' }}</td>
                                 <td>
                                     {% if medicament.nombre > 0 %}
                                         <input type="number" name="quantities[{{ medicament.id }}]" value="1" min="1" max="{{ medicament.nombre }}" class="form-control d-inline-block w-25">
                                         <button type="submit" name="medicament_id" value="{{ medicament.id }}" class="btn btn-sm btn-primary"
-                                            {% if medicament.ordonnance %}onclick="return confirm(&quot;Ce médicament nécessite une approbation médicale. Continuer ?&quot;)"{% endif %}>
+                                            {% if medicament.ordonnance %}onclick="return confirm('Ce médicament nécessite une approbation médicale. Continuer ?')"{% endif %}>
                                             Ajouter au panier
                                         </button>
                                     {% else %}
